@@ -1,0 +1,48 @@
+---
+/**
+ * Research detail — the piece's abstract, then a pointer to the full essay.
+ */
+import DetailLayout from '../../layouts/DetailLayout.astro'
+import { research } from '../../data'
+
+export function getStaticPaths() {
+  return research.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+---
+
+<DetailLayout
+  pathname={`/research/${entry.id}`}
+  backTo="/research"
+  backLabel="research"
+  docTitle={`${entry.title} — paul elisha`}
+>
+  <div class="flex items-center gap-2 text-[12px] text-muted-foreground">
+    <span>{entry.index}</span>
+    <span>·</span>
+    <span>research</span>
+  </div>
+
+  <h1 class="mt-2 text-[20px] font-semibold tracking-[-0.01em] text-foreground">
+    {entry.title}
+  </h1>
+
+  <p class="mt-5 text-[15px] leading-[1.7] text-foreground">{entry.text}</p>
+
+  <p class="mt-4 text-[13px] text-muted-foreground">
+    The full piece lives on the blog — continue there to read it end to end.
+  </p>
+
+  <a
+    href={entry.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ref-link touch mt-6 inline-block text-[15px]"
+  >
+    read the full piece
+  </a>
+</DetailLayout>

@@ -1,0 +1,180 @@
+---
+/**
+ * Project detail — media plate, summary, links, stack, then the long-form
+ * blocks (overview / how it works / details) and the flow map.
+ */
+import DetailLayout from '../../layouts/DetailLayout.astro'
+import { categories, categoryIdForType, projects } from '../../data'
+
+export function getStaticPaths() {
+  return projects.map((item) => ({
+    params: { id: item.id },
+    props: { item },
+  }))
+}
+
+const { item } = Astro.props
+const category = categoryIdForType(item.type)
+const q = (n: number) => String(n).padStart(2, '0')
+const paragraphs = item.overview ? item.overview.split('\n\n') : []
+---
+
+<DetailLayout
+  pathname={`/work/${item.id}`}
+  backTo={`/work?category=${category}`}
+  backLabel="work"
+  docTitle={`${item.name} — paul elisha`}
+>
+  <div class="flex items-center gap-2 text-[12px] text-muted-foreground">
+    <span>{item.id}</span>
+    <span>·</span>
+    <span>{item.type.toLowerCase()}</span>
+  </div>
+
+  <h1
+    class="mt-2 flex items-center gap-2 text-[20px] font-semibold tracking-[-0.01em] text-foreground"
+  >
+    {item.logo && <img src={item.logo} alt="" class="h-4 w-4 rounded-[3px] object-cover" />}
+    <span>{item.name}</span>
+  </h1>
+
+  <p class="mt-1 text-[13px] text-muted-foreground">{item.role}</p>
+
+  <div class="group rise mt-6 overflow-hidden rounded-[15px] bg-accent">
+    {
+      item.video ? (
+        <video
+          src={item.video}
+          autoplay
+          muted
+          loop
+          playsinline
+          controls
+          preload="metadata"
+          poster={item.image}
+          class="aspect-video block w-full object-contain"
+        />
+      ) : (
+        <img
+          src={item.image}
+          alt={item.name}
+          loading="lazy"
+          class="aspect-video w-full object-contain object-center transition-transform duration-200 group-hover:scale-[1.01]"
+        />
+      )
+    }
+  </div>
+
+  <p class="mt-6 text-[15px] leading-[1.7] text-foreground">{item.summary}</p>
+
+  {
+    (item.link || item.submission) && (
+      <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[13px]">
+        {item.link && (
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noreferrer"
+            class="ref-link touch inline-block"
+          >
+            live
+          </a>
+        )}
+        {item.submission && (
+          <a
+            href={item.submission}
+            target="_blank"
+            rel="noreferrer"
+            class="ref-link touch inline-block"
+          >
+            submission
+          </a>
+        )}
+      </div>
+    )
+  }
+
+  {
+    item.techStack && (
+      <div class="mt-8">
+        <p class="mb-2 text-[12px] text-muted-foreground">stack</p>
+        <div class="flex flex-wrap gap-1.5">
+          {item.techStack.map((t, i) => (
+            <span
+              class="rise rounded-md border border-border px-1.5 py-0.5 text-[12px] text-foreground"
+              style={`animation-delay:${i * 35}ms`}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    item.overview && (
+      <div class="mt-9">
+        <h2 class="mb-2 text-[15px] font-semibold text-foreground">overview</h2>
+        <div class="space-y-3 text-[15px] leading-[1.7] text-foreground">
+          {paragraphs.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    item.howItWorks && (
+      <div class="mt-9">
+        <h2 class="mb-3 text-[15px] font-semibold text-foreground">how it works</h2>
+        <div class="space-y-4">
+          {item.howItWorks.map((step, i) => (
+            <div class="rise border-l border-border pl-3" style={`animation-delay:${i * 70}ms`}>
+              <p class="text-[12px] text-muted-foreground">
+                {q(i + 1)} · {step.title}
+              </p>
+              <p class="mt-1 text-[15px] leading-[1.7] text-foreground">{step.text}</p>
+              {step.bullets && (
+                <ul class="mt-2 list-inside list-disc space-y-1 text-[15px] leading-[1.7] text-foreground">
+                  {step.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    item.details && item.details.length > 0 && (
+      <div class="mt-9 space-y-5">
+        {item.details.map((d, i) => (
+          <div class="rise border-l border-border pl-3" style={`animation-delay:${i * 70}ms`}>
+            <p class="text-[12px] text-muted-foreground">
+              {q(i + 1)} · {d.label}
+            </p>
+            <p class="mt-1 text-[15px] leading-[1.7] text-foreground">{d.text}</p>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    item.map && item.map.length > 0 && (
+      <div class="mt-9 flex flex-wrap items-center gap-1.5 text-[12px] text-muted-foreground">
+        {item.map.map((node, i) => (
+          <span class="flex items-center gap-1.5">
+            <span class="chip">{node}</span>
+            {i < item.map.length - 1 && <span aria-hidden="true">→</span>}
+          </span>
+        ))}
+      </div>
+    )
+  }
+</DetailLayout>

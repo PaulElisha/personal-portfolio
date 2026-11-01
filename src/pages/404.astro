@@ -1,0 +1,45 @@
+---
+/**
+ * 404 — reworked into the site's own design system rather than the generic
+ * platform page. Same voice, same tokens, same motion.
+ */
+import Base from '../layouts/Base.astro'
+import BottomNav from '../components/BottomNav.astro'
+import ThemeToggle from '../components/ThemeToggle.astro'
+---
+
+<Base title="not found — paul elisha">
+  <main class="flex min-h-[100dvh] flex-col bg-background px-5 pt-10 md:px-6 md:pt-[72px]">
+    <ThemeToggle />
+    <BottomNav pathname="/404" />
+
+    <div class="page-anim mx-auto flex w-full max-w-[680px] flex-1 flex-col justify-center pb-32">
+      <p class="rise text-[13px] text-muted-foreground">404 · not found</p>
+
+      <h1
+        class="rise mt-3 text-[20px] font-semibold tracking-[-0.01em] text-foreground"
+        style="animation-delay:60ms"
+      >
+        this route doesn't exist.
+      </h1>
+
+      <p
+        class="rise mt-4 max-w-[560px] text-[15px] leading-[1.7] text-muted-foreground"
+        style="animation-delay:120ms"
+      >
+        The page you asked for isn't here — it may have moved, or the link is stale.
+      </p>
+
+      <span
+        class="rule mt-8 max-w-[120px]"
+        style="animation-delay:200ms"
+        aria-hidden="true"></span>
+
+      <div class="rise mt-8 flex flex-wrap gap-4 text-[15px]" style="animation-delay:260ms">
+        <a href="/" class="ref-link touch inline-block">home</a>
+        <a href="/work" class="ref-link touch inline-block">work</a>
+        <a href="/research" class="ref-link touch inline-block">research</a>
+      </div>
+    </div>
+  </main>
+</Base>

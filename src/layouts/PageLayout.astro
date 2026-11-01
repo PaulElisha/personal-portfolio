@@ -1,0 +1,46 @@
+---
+/**
+ * Page shell for the list surfaces (home, work, research).
+ * Wordmark, optional heading block, then the body — matching the
+ * original's `pv` layout: wordmark at the top, header at mt-8,
+ * body at mt-8 (with a title) or mt-6 (without).
+ */
+import Base from './Base.astro'
+import ThemeToggle from '../components/ThemeToggle.astro'
+import BottomNav from '../components/BottomNav.astro'
+
+interface Props {
+  pathname: string
+  title?: string
+  meta?: string
+  docTitle?: string
+}
+
+const { pathname, title, meta, docTitle } = Astro.props
+---
+
+<Base title={docTitle ?? (title ? `${title} — paul elisha` : undefined)}>
+  <main class="min-h-screen bg-background px-5 pb-32 pt-10 md:px-6 md:pt-[72px]">
+    <ThemeToggle />
+    <BottomNav pathname={pathname} />
+    <div class="page-anim mx-auto w-full max-w-[680px]">
+      <a
+        href="/"
+        class="text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+      >
+        paul elisha
+      </a>
+      {
+        title && (
+          <header class="rise mt-8">
+            <h1 class="text-[17px] font-semibold tracking-[-0.01em] text-foreground">{title}</h1>
+            {meta && <p class="mt-1 text-[15px] text-muted-foreground">{meta}</p>}
+          </header>
+        )
+      }
+      <div class={title ? 'mt-8' : 'mt-6'}>
+        <slot />
+      </div>
+    </div>
+  </main>
+</Base>

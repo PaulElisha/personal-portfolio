@@ -1,0 +1,35 @@
+# node
+node_modules/
+.pnpm-store/
+
+# astro
+dist/
+.astro/
+.vercel/
+.output/
+
+# env
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# logs / pids
+*.log
+npm-debug.log*
+pids/
+*.pid
+*.seed
+.pm2/
+
+# editor / os
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# backups
+*.tar.gz
+*.zip
+*.bak

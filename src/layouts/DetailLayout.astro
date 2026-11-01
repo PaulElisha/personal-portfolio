@@ -1,0 +1,39 @@
+---
+/**
+ * Detail route shell: back link + wordmark, then the entry body.
+ * Matches the original detail layout (no theme toggle on this surface).
+ * A thin progress rail tracks read depth on these long-form pages.
+ */
+import Base from './Base.astro'
+import BottomNav from '../components/BottomNav.astro'
+import ScrollRail from '../components/ScrollRail.astro'
+
+interface Props {
+  pathname: string
+  backTo: string
+  backLabel: string
+  docTitle?: string
+}
+const { pathname, backTo, backLabel, docTitle } = Astro.props
+---
+
+<Base title={docTitle}>
+  <ScrollRail />
+  <main class="min-h-screen bg-background px-5 pb-32 pt-10 md:px-6 md:pt-[72px]">
+    <BottomNav pathname={pathname} />
+    <div class="page-anim mx-auto w-full max-w-[680px]">
+      <div class="flex items-center justify-between text-[13px] text-muted-foreground">
+        <a
+          href={backTo}
+          class="inline-flex items-center gap-1.5 transition-colors duration-150 hover:text-foreground"
+        >
+          ← {backLabel}
+        </a>
+        <a href="/" class="transition-colors duration-150 hover:text-foreground">paul elisha</a>
+      </div>
+      <div class="mt-10 rise">
+        <slot />
+      </div>
+    </div>
+  </main>
+</Base>

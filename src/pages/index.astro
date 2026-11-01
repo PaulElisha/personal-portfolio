@@ -1,0 +1,75 @@
+---
+/**
+ * Home — a single viewport composition: statement on the left, footer plate
+ * below. Boot curtain plays once per session; everything else rises in sequence.
+ */
+import Base from '../layouts/Base.astro'
+import BootLoader from '../components/BootLoader.astro'
+import ThemeToggle from '../components/ThemeToggle.astro'
+import BottomNav from '../components/BottomNav.astro'
+
+const links = [
+  { label: 'X', href: 'https://x.com/paulelishaa', external: true },
+  { label: 'mail', href: 'mailto:ajaoireoluwa1@gmail.com', external: false },
+]
+---
+
+<Base title="paul elisha — backend engineer">
+  <main class="relative flex h-[100dvh] flex-col overflow-hidden bg-background">
+    <BootLoader />
+    <ThemeToggle />
+    <BottomNav pathname="/" />
+
+    <div class="flex flex-1 items-center px-5 md:px-6">
+      <div class="page-anim mx-auto w-full max-w-[680px]">
+        <h1 class="rise text-[17px] font-semibold tracking-[-0.01em] text-foreground">
+          paul elisha
+        </h1>
+        <p
+          class="rise mt-1 text-[15px] text-muted-foreground"
+          style="animation-delay:60ms"
+        >
+          backend engineer, smart contract engineer, research.<span
+            class="caret"
+            aria-hidden="true"></span>
+        </p>
+        <p
+          class="rise mt-7 max-w-[560px] text-[15px] leading-[1.7] text-foreground"
+          style="animation-delay:120ms"
+        >
+          I make backend decisions — architecture, data communication, APIs and reliability —
+          across software, distributed protocol and dev tooling.
+        </p>
+        <p
+          class="rise mt-4 max-w-[560px] text-[15px] text-muted-foreground"
+          style="animation-delay:180ms"
+        >
+          2x hackathon winner @ Base, Kaia (on-chain summer).
+        </p>
+      </div>
+    </div>
+
+    <footer class="rounded-t-[38px] bg-surface px-5 pb-24 pt-8 md:px-6">
+      <div
+        class="rise mx-auto flex w-full max-w-[680px] flex-wrap items-center justify-between gap-2"
+        style="animation-delay:260ms"
+      >
+        <span class="text-[13px] text-muted-foreground">open to opportunities</span>
+        <div class="flex gap-3 text-[15px]">
+          {
+            links.map((l) => (
+              <a
+                href={l.href}
+                target={l.external ? '_blank' : undefined}
+                rel={l.external ? 'noopener noreferrer' : undefined}
+                class="ref-link touch inline-block"
+              >
+                {l.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </footer>
+  </main>
+</Base>

@@ -1,0 +1,141 @@
+---
+/**
+ * Work index — three category panels (experience / open source / projects).
+ * Each panel is fully server-rendered with its own header and prev/next pair,
+ * so the markup matches the original exactly. Alpine drives the switching and
+ * keeps the URL in sync; a pre-paint script keeps deep links correct before
+ * Alpine boots.
+ */
+import PageLayout from '../../layouts/PageLayout.astro'
+import ProjectCard from '../../components/ProjectCard.astro'
+import { categories, projectsInCategory } from '../../data'
+
+const q = (n: number) => String(n).padStart(2, '0')
+const panels = categories.map((cat, i) => ({
+  ...cat,
+  index: i,
+  items: projectsInCategory(cat.id),
+  prev: categories[i - 1],
+  next: categories[i + 1],
+}))
+const initial = panels[0].id
+
+// Built in frontmatter so the braces inside the expression never have to
+// survive Astro's inline-expression parser.
+const workState = [
+  '{',
+  `  active: (new URLSearchParams(location.search).get('category') || '${initial}'),`,
+  '  set(c) {',
+  '    this.active = c;',
+  `    history.replaceState(null, '', '/work?category=' + c);`,
+  '  }',
+  '}',
+].join('\n')
+---
+
+<PageLayout
+  pathname="/work"
+  title="work"
+  meta="ideas, products, and things i've built & brought to life."
+>
+  <div id="work-list" data-initial={initial} x-data={workState}>
+    {
+      panels.map((panel, pi) => (
+        <section
+          class="work-panel"
+          data-cat={panel.id}
+          style={pi === 0 ? undefined : 'display:none'}
+          x-show={`active === '${panel.id}'`}
+        >
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div class="flex items-baseline gap-2 text-[13px]">
+              <span class="text-foreground">{panel.label.toLowerCase()}</span>
+              <span class="text-muted-foreground">
+                {q(panel.index + 1)} / {q(panels.length)}
+              </span>
+              <span class="text-muted-foreground">· {panel.items.length}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              {panel.prev ? (
+                <button
+                  type="button"
+                  x-on:click={`set('${panel.prev.id}')`}
+                  aria-label={`previous: ${panel.prev.label}`}
+                  class="press rounded-md border border-border p-1 text-muted-foreground hover:border-foreground/30 hover:text-foreground"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+              ) : (
+                <span class="invisible rounded-md border border-border p-1">
+                  <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" />
+                </span>
+              )}
+              {panel.next ? (
+                <button
+                  type="button"
+                  x-on:click={`set('${panel.next.id}')`}
+                  aria-label={`next: ${panel.next.label}`}
+                  class="press rounded-md border border-border p-1 text-muted-foreground hover:border-foreground/30 hover:text-foreground"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+              ) : (
+                <span class="invisible rounded-md border border-border p-1">
+                  <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" />
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 gap-x-3.5 gap-y-8 sm:grid-cols-2 lg:relative lg:left-1/2 lg:w-[min(860px,calc(100vw_-_48px))] lg:-translate-x-1/2 lg:grid-cols-3">
+            {panel.items.map((item, i) => (
+              <ProjectCard item={item} category={panel.id} delay={i * 70} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</PageLayout>
+
+<script is:inline>
+  // Establish the correct panel before first paint so deep links and reloads
+  // never flash the wrong category while Alpine is still booting.
+  ;(function () {
+    var root = document.getElementById('work-list')
+    if (!root) return
+    var cat = new URLSearchParams(location.search).get('category')
+    if (!cat) return
+    var panels = root.querySelectorAll('.work-panel')
+    var known = false
+    panels.forEach(function (p) {
+      if (p.getAttribute('data-cat') === cat) known = true
+    })
+    if (!known) return
+    panels.forEach(function (p) {
+      p.style.display = p.getAttribute('data-cat') === cat ? '' : 'none'
+    })
+  })()
+</script>

@@ -1,0 +1,74 @@
+---
+/**
+ * Full-screen boot curtain — shown once per browser session on the home route.
+ * Letters rise in sequence, hairline draws, then the panel lifts away.
+ */
+const brand = 'paul elisha'
+---
+
+<div id="boot-loader" class="pointer-events-none fixed inset-0 z-[100] overflow-hidden">
+  <div
+    id="boot-panel"
+    class="absolute inset-0 flex flex-col items-center justify-center bg-foreground"
+    style="transform:translateY(0);border-bottom-left-radius:0px;border-bottom-right-radius:0px;transition:transform 900ms cubic-bezier(0.76, 0, 0.24, 1), border-radius 900ms cubic-bezier(0.76, 0, 0.24, 1)"
+  >
+    <div class="flex overflow-hidden pb-[0.14em]" aria-hidden="true">
+      {
+        brand.split('').map((ch, i) => (
+          <span
+            class="welcome-letter inline-block text-[clamp(1.4rem,4.2vw,2.4rem)] font-medium tracking-[-0.02em] text-background"
+            style={`animation-delay:${180 + i * 48}ms`}
+          >
+            {ch === ' ' ? '\u00A0' : ch}
+          </span>
+        ))
+      }
+    </div>
+    <span
+      class="mt-5 h-px w-10 origin-left animate-[boot_1100ms_ease-out_forwards] bg-background/40"
+    ></span>
+    <span
+      class="welcome-letter mt-4 text-[11px] uppercase tracking-[0.32em] text-background/50"
+      style="animation-delay:760ms">portfolio</span
+    >
+  </div>
+</div>
+
+<script is:inline>
+  ;(function () {
+    var loader = document.getElementById('boot-loader')
+    var panel = document.getElementById('boot-panel')
+    if (!loader || !panel) return
+
+    var seen = false
+    try {
+      seen = sessionStorage.getItem('pl_loaded') === '1'
+    } catch (e) {}
+
+    if (seen) {
+      loader.remove()
+      return
+    }
+
+    var hide = setTimeout(function () {
+      panel.style.transform = 'translateY(-101%)'
+      panel.style.borderBottomLeftRadius = '44px'
+      panel.style.borderBottomRightRadius = '44px'
+    }, 1950)
+
+    var done = setTimeout(function () {
+      loader.remove()
+      try {
+        sessionStorage.setItem('pl_loaded', '1')
+      } catch (e) {}
+    }, 2850)
+
+    window.addEventListener('pagehide', function () {
+      clearTimeout(hide)
+      clearTimeout(done)
+      try {
+        sessionStorage.setItem('pl_loaded', '1')
+      } catch (e) {}
+    })
+  })()
+</script>
