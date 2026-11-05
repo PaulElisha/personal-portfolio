@@ -38,18 +38,6 @@ const caption = item.blurb || item.summary
   <div class="card-cap">
     <div class="card-top">
       <span class="card-name">{item.name}</span>
-      <span class="card-links" aria-hidden="true">
-        <span class="route">
-          <svg
-            class="cursor-ico"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            stroke="none"
-          >
-            <path d="M5 3l14 8-6 1.6L9.6 19 5 3z"></path>
-          </svg>
-        </span>
-      </span>
     </div>
     {item.role && <span class="card-role">{item.role}</span>}
     <p class="card-desc">{caption}</p>

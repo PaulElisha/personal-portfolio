@@ -265,7 +265,6 @@
   .card-top {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
     gap: 8px;
     min-width: 0;
   }
@@ -281,34 +280,6 @@
 
   .card:hover .card-name {
     color: hsl(var(--link));
-  }
-
-  .card-links {
-    font-size: 10.5px;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    flex: none;
-  }
-
-  .card-links .route {
-    color: hsl(var(--link));
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-  }
-
-  .cursor-ico {
-    width: 9.5px;
-    height: 9.5px;
-    flex: none;
-    transform: scaleX(-1);
-    transition: transform 0.15s ease;
-  }
-
-  .card:hover .cursor-ico {
-    transform: scaleX(-1) translate(-2px, 1px);
   }
 
   .card-role {
